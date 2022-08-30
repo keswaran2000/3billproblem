@@ -1,0 +1,154 @@
+noOfBills = [bill1 = { A: 1000, B: 2000, C: 1000},
+bill2 = { A: 300, B: 400, C: 100 },
+bill3 = { A: 3000, B: 100, D: 200 },
+
+]
+//To find the average of the each bills 
+function averageOfBills(obj1) {      
+  empList = []
+  sum = 0
+  avg = 0
+  for (i in obj1) {
+    empList.push(obj1[i])
+    //console.log(obj1[i])
+  }
+  // console.log(empList)
+  for (i of empList) {
+    sum = sum + i
+  }
+  avg = sum / empList.length
+  return avg
+
+
+}
+const billPaid = (obj2) => {              //it separate the key and values
+  for (i in obj2) {
+    avgOne = averageOfBills(obj2)
+    for (i in obj2) {
+      obj2[i] = obj2[i] - avgOne
+      // console.log(obj2)               //contribution by average
+    }
+  }
+  return obj2
+
+
+}
+for (i in noOfBills) {
+  noOfBills[i] = billPaid(noOfBills[i])
+}
+// console.log(noOfBills)
+payment = {}
+for (i = 0; i < noOfBills.length; i++) {
+  for (j in noOfBills[i]) {
+    if (j in payment) {
+      payment[j] = payment[j] + noOfBills[i][j]
+    }
+    else {
+      payment[j] = noOfBills[i][j]
+    }
+  }
+}
+//
+
+personToGet = {}
+personToPay = {}
+for (i in payment) {
+  if (payment[i] == 0) {
+    console.log(i + "no need to pay")
+  }
+  else if (payment[i] < 0) {
+    personToPay[i] = payment[i]
+  }
+  else if (payment[i] > 0) {
+    personToGet[i] = payment[i]
+  }
+}
+
+// console.log("amount should pay",personToPay)
+// console.log("amount should get",personToGet)
+
+
+//personTopay the amount
+empArr1 = []
+wantsToPay = {}
+for (i in personToPay) {
+  empArr1.push(personToPay[i])
+}
+function values(a, b) {
+  return a - b
+}
+empArr1.sort(values)
+for (j of empArr1) {
+  for (k in personToPay) {
+    if (j == personToPay[k]) {
+      wantsToPay[k] = personToPay[k]
+    }
+  }
+}
+// console.log(wantsToPay,"personToPay")
+
+//sorted person to get
+empArr2 = []
+wantsToGet = {}
+for (i in personToGet) {
+  empArr2.push(personToGet[i])
+}
+function sorting(a, b) {
+  return a - b
+}
+empArr1.sort(sorting)
+empArr1.reverse()
+// console.log('the reverse sorting value',empArr1.reverse())
+for (j of empArr2) {
+  for (m in personToGet) {
+    if (j == personToGet[m]) {
+      wantsToGet[m] = personToGet[m]
+    }
+  }
+}
+// console.log(wantsToGet,"personToGet")
+
+
+
+// remove zero function eg: if A settles the amount to the B or something it removes the A after he payed the amount 
+const removeZero = (obj3) => {
+  removeZeroObj = {}
+  for (i in obj3) {
+    if (i in obj3) {
+      if (obj3[i] != 0) {
+        removeZeroObj[i] = obj3[i]
+      }
+    }
+    return removeZeroObj
+  }
+}
+personToGet = wantsToGet
+personToPay = wantsToPay
+
+//amount should be settled
+for (j in personToPay) {
+  for (i in personToGet) {
+    if (personToGet[i] != 0 && personToPay[j] != 0) {
+      if (personToGet[i] < Math.abs(personToPay[j])) {
+        console.log(`${j} should pay ${i}:Rs.${personToGet[i]}`)
+        balance = personToPay[j] + personToGet[i]
+        personToPay[j] = balance
+        personToGet[i] = 0
+
+      } else if (personToGet[i] > Math.abs(personToPay[j])) {
+        console.log(`${j} should pay ${i}:Rs.${Math.abs(Math.round(personToPay[j]))}`)
+        balance = personToPay[j] + personToGet[i]
+        personToPay[j] = 0
+        personToGet[i] = balance
+
+      } else if (personToGet[i] == Math.abs(personToPay[j])) {
+        console.log(`${j} should pay ${i}:Rs.${Math.abs(Math.round(personToPay[j]))}`)
+        balance = personToPay[j] + personToGet[i]
+        personToPay[j] = 0
+        personToGet[i] = 0
+      }
+    }
+  }
+}
+
+
